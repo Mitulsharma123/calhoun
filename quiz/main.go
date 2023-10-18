@@ -12,7 +12,7 @@ import (
 func main(){
 	csvfileName := flag.String("csv", "problems.csv", "a csv file in QnA format")
 	
-	timeLimit := flag.Int("limit", 5, "time limit for the quiz in seconds")
+	timeLimit := flag.Int("limit", 10, "time limit for the quiz in seconds")
 	flag.Parse()
 
 	file, err := os.Open(*csvfileName)
@@ -29,24 +29,32 @@ func main(){
 
 	count := 0
 	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
-	//<-timer.C
 
+problemLoop:
 	for i, p := range problems{
-		select{
-		case <-timer.C:
-			fmt.Printf("You've Scored %d out of %d\n", count, len(problems))
-			return	//not using break, as it will come out of entire loop
-		default: 
-			fmt.Printf("Problem #%d: %s =? \n", i+1, p.q)
+		fmt.Printf("Problem #%d: %s =? \n", i+1, p.q)
+		answerCh := make(chan string)
+		go func(){
 			var answer string
 			fmt.Scanf("%s \n", &answer)
+			answerCh <- answer
+		}()
+
+		select{
+		case <-timer.C:
+			fmt.Println()
+			return	//not using break, as it will come out of entire loop
+			break problemLoop // if using loop
+		case answer := <- answerCh: 
 			if answer == p.a{
 				//fmt.Println("Correct Answer !!!")
 				count++
 			}
 		}			
 	}
+	fmt.Printf("\nYou've Scored %d out of %d\n", count, len(problems))
 }
+
 //parseLines will take input as 2D lines array and return slice of problems
 func parseLines(lines [][]string) []problem{
 	ret := make([]problem, len(lines))
