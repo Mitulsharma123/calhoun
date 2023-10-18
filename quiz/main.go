@@ -20,9 +20,11 @@ func main(){
 	if err!=nil{
 		exit("Failed to parse the provided the csv file")
 	}
-	fmt.Println(lines)			
+	problems := parseLines(lines)	
+	fmt.Println(problems)	//result in form of struct variable	
 }
-	
+
+
 
 //parseLines will take input as 2D lines array and return slice of problems
 func parseLines(lines [][]string) []problem{
