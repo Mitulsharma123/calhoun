@@ -12,7 +12,7 @@ import (
 func main(){
 	csvfileName := flag.String("csv", "problems.csv", "a csv file in QnA format")
 	
-	timeLimit := flag.Int("limit", 4, "time limit for the quiz in seconds")
+	timeLimit := flag.Int("limit", 5, "time limit for the quiz in seconds")
 	flag.Parse()
 
 	file, err := os.Open(*csvfileName)
@@ -29,20 +29,24 @@ func main(){
 
 	count := 0
 	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
-	<-timer.C
+	//<-timer.C
 
 	for i, p := range problems{
-		fmt.Printf("Problem #%d: %s =? \n", i+1, p.q)
-		var answer string
-		fmt.Scanf("%s \n", &answer)
-		if answer == p.a{
-			//fmt.Println("Correct Answer !!!")
-			count++
-		}
-	}			
-		fmt.Printf("You've Scored %d out of %d\n", count, len(problems))
+		select{
+		case <-timer.C:
+			fmt.Printf("You've Scored %d out of %d\n", count, len(problems))
+			return	//not using break, as it will come out of entire loop
+		default: 
+			fmt.Printf("Problem #%d: %s =? \n", i+1, p.q)
+			var answer string
+			fmt.Scanf("%s \n", &answer)
+			if answer == p.a{
+				//fmt.Println("Correct Answer !!!")
+				count++
+			}
+		}			
+	}
 }
-
 //parseLines will take input as 2D lines array and return slice of problems
 func parseLines(lines [][]string) []problem{
 	ret := make([]problem, len(lines))
