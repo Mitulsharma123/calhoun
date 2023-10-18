@@ -6,10 +6,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 func main(){
 	csvfileName := flag.String("csv", "problems.csv", "a csv file in QnA format")
+	
+	timeLimit := flag.Int("limit", 4, "time limit for the quiz in seconds")
 	flag.Parse()
 
 	file, err := os.Open(*csvfileName)
@@ -25,6 +28,9 @@ func main(){
 	//fmt.Println(problems)	//result in form of struct variable	
 
 	count := 0
+	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
+	<-timer.C
+
 	for i, p := range problems{
 		fmt.Printf("Problem #%d: %s =? \n", i+1, p.q)
 		var answer string
@@ -33,9 +39,8 @@ func main(){
 			//fmt.Println("Correct Answer !!!")
 			count++
 		}
-	}
-	fmt.Printf("You've Scored %d out of %d\n", count, len(problems))
-
+	}			
+		fmt.Printf("You've Scored %d out of %d\n", count, len(problems))
 }
 
 //parseLines will take input as 2D lines array and return slice of problems
