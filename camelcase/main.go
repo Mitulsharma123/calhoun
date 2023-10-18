@@ -2,22 +2,18 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main(){
 		var input string = "oneTwoThree"
 		answer := 1
 		for _, ch := range input{
-			min := 'A'
-			max := 'Z'
-			if ch >= min && ch <= max{
-				answer++
-			}
-			/*str := string(ch)
+			str := string(ch)
 			if strings.ToUpper(str) == str{
 				answer++
-			}*/
+			}
 		}
-		fmt.Println(answer)
+		fmt.Printf("Number of words prsent in the string is %d\n", answer)
 }
 
