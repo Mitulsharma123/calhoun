@@ -1,0 +1,3 @@
+- Build a cli using spf13/cobra library to perform daily task 
+- inside /cmd put commnds we use 
+- main.go for integration with database 
