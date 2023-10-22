@@ -5,6 +5,7 @@ import (
 )
 
 func normalize(phonenum string) string{
+	// Compile a regular expression pattern that matches any non-digit character
 	re := regexp.MustCompile("\\D")
 	return re.ReplaceAllString(phonenum, "")
 }
