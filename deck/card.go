@@ -1,12 +1,13 @@
+//go:generate stringer -type=Suit,Rank
 package deck
 
 type Suit uint8
 
 const (
 	Spade Suit = iota
-	Heart Suit
-	Diamond Suit
-	Club Suit
+	Heart
+	Diamond
+	Club
 )
 
 type Rank uint8
@@ -33,3 +34,6 @@ type Card struct{
 	Rank
 }
 
+func (c Card) String() string{
+  return "Ace of hearts"
+}
